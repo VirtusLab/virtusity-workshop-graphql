@@ -1,0 +1,38 @@
+{
+  "name": "nfs-schema-test",
+  "description": "",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "nodemon -x ts-node --pretty ./src/index.ts",
+    "generate:graphql:ts": "graphql-codegen"
+  },
+  "dependencies": {
+    "apollo-server": "^2.8.1",
+    "graphql": "^14.4.2",
+    "graphql-iso-date": "^3.6.1",
+    "graphql-scalars": "^1.0.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/add": "^1.5.0",
+    "@graphql-codegen/cli": "^1.5.0",
+    "@graphql-codegen/typescript": "^1.5.0",
+    "@graphql-codegen/typescript-operations": "^1.5.0",
+    "@graphql-codegen/typescript-resolvers": "^1.5.0",
+    "@types/graphql": "^14.2.3",
+    "@types/graphql-iso-date": "^3.3.1",
+    "@types/node": "^12.7.1",
+    "nodemon": "^1.19.1",
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.3"
+  },
+  "nodemonConfig": {
+    "ignore": ["**/*.test.ts", "**/*.spec.ts", ".git", "node_modules"],
+    "watch": ["src"],
+    "env": {
+      "NODE_ENV": "development"
+    },
+    "ext": "ts,js,json"
+  },
+  "keywords": []
+}

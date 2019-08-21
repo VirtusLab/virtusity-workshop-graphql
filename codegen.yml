@@ -1,0 +1,20 @@
+schema: src/**/typeDefs.ts
+generates:
+  "src/schema/types.ts":
+    - add: '// THIS IS A GENERATED FILE, use `yarn generate:graphql:ts to regenerate`'
+    - typescript
+    - typescript-operations
+    - typescript-resolvers
+config:
+  avoidOptionals: false
+  constEnums: false
+  useIndexSignature: true # https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-474766729
+  immutableTypes: true
+  namingConvention:
+    typeNames: change-case#pascalCase
+    enumValues: change-case#upperCase
+  scalars:
+    DateTime: Date
+    Date: Date
+    Time: Date
+  contextType: ServerContext
