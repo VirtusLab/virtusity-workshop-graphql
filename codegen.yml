@@ -1,4 +1,6 @@
-schema: src/**/typeDefs.ts
+schema:
+  - src/schema/index.ts
+  - src/schema/**/typeDefs.ts
 generates:
   "src/schema/types.ts":
     - add: '// THIS IS A GENERATED FILE, use `yarn generate:graphql:ts to regenerate`'
