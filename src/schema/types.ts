@@ -1,6 +1,7 @@
 // THIS IS A GENERATED FILE, use `yarn generate:graphql:ts to regenerate`
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -42,6 +43,113 @@ export type Scalars = {
 };
 
 
+export type Character = {
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+};
+
+
+export type CharacterFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+export type ColorInput = {
+  readonly red: Scalars['Int'],
+  readonly green: Scalars['Int'],
+  readonly blue: Scalars['Int'],
+};
+
+
+
+export type Droid = Character & {
+  __typename?: 'Droid',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+  readonly primaryFunction?: Maybe<Scalars['String']>,
+};
+
+
+export type DroidFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+
+export enum Episode {
+  NEWHOPE = 'NEWHOPE',
+  EMPIRE = 'EMPIRE',
+  JEDI = 'JEDI'
+}
+
+export type FriendsConnection = {
+  __typename?: 'FriendsConnection',
+  readonly totalCount?: Maybe<Scalars['Int']>,
+  readonly edges?: Maybe<ReadonlyArray<Maybe<FriendsEdge>>>,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly pageInfo: PageInfo,
+};
+
+export type FriendsEdge = {
+  __typename?: 'FriendsEdge',
+  readonly cursor: Scalars['ID'],
+  readonly node?: Maybe<Character>,
+};
+
+
+
+
+
+export type Human = Character & {
+  __typename?: 'Human',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly homePlanet?: Maybe<Scalars['String']>,
+  readonly height?: Maybe<Scalars['Float']>,
+  readonly mass?: Maybe<Scalars['Float']>,
+  readonly friends?: Maybe<ReadonlyArray<Maybe<Character>>>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Maybe<Episode>>,
+  readonly starships?: Maybe<ReadonlyArray<Maybe<Starship>>>,
+};
+
+
+export type HumanHeightArgs = {
+  unit?: Maybe<LengthUnit>
+};
+
+
+export type HumanFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+
+
+
+export enum LengthUnit {
+  METER = 'METER',
+  FOOT = 'FOOT'
+}
+
+
+
+export type Mutation = {
+  __typename?: 'Mutation',
+  readonly createReview?: Maybe<Review>,
+};
+
+
+export type MutationCreateReviewArgs = {
+  episode?: Maybe<Episode>,
+  review: ReviewInput
+};
 
 
 
@@ -49,16 +157,12 @@ export type Scalars = {
 
 
 
-
-
-
-
-
-
-
-
-
-
+export type PageInfo = {
+  __typename?: 'PageInfo',
+  readonly startCursor?: Maybe<Scalars['ID']>,
+  readonly endCursor?: Maybe<Scalars['ID']>,
+  readonly hasNextPage: Scalars['Boolean'],
+};
 
 
 
@@ -69,9 +173,89 @@ export type Query = {
   __typename?: 'Query',
   readonly ping: Scalars['String'],
   readonly hello: Scalars['String'],
+  readonly hero?: Maybe<Character>,
+  readonly reviews?: Maybe<ReadonlyArray<Maybe<Review>>>,
+  readonly search?: Maybe<ReadonlyArray<Maybe<SearchResult>>>,
+  readonly character?: Maybe<Character>,
+  readonly droid?: Maybe<Droid>,
+  readonly human?: Maybe<Human>,
+  readonly starship?: Maybe<Starship>,
 };
 
 
+export type QueryHeroArgs = {
+  episode?: Maybe<Episode>
+};
+
+
+export type QueryReviewsArgs = {
+  episode: Episode
+};
+
+
+export type QuerySearchArgs = {
+  text?: Maybe<Scalars['String']>
+};
+
+
+export type QueryCharacterArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryDroidArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryHumanArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryStarshipArgs = {
+  id: Scalars['ID']
+};
+
+export type Review = {
+  __typename?: 'Review',
+  readonly episode?: Maybe<Episode>,
+  readonly stars: Scalars['Int'],
+  readonly commentary?: Maybe<Scalars['String']>,
+};
+
+export type ReviewInput = {
+  readonly stars: Scalars['Int'],
+  readonly commentary?: Maybe<Scalars['String']>,
+  readonly favorite_color?: Maybe<ColorInput>,
+};
+
+
+
+export type SearchResult = Human | Droid | Starship;
+
+export type Starship = {
+  __typename?: 'Starship',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly length?: Maybe<Scalars['Float']>,
+  readonly coordinates?: Maybe<ReadonlyArray<ReadonlyArray<Scalars['Float']>>>,
+};
+
+
+export type StarshipLengthArgs = {
+  unit?: Maybe<LengthUnit>
+};
+
+export type Subscription = {
+  __typename?: 'Subscription',
+  readonly reviewAdded?: Maybe<Review>,
+};
+
+
+export type SubscriptionReviewAddedArgs = {
+  episode?: Maybe<Episode>
+};
 
 
 
@@ -150,82 +334,127 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
-  String: ResolverTypeWrapper<Scalars['String']>,
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
-  Date: ResolverTypeWrapper<Scalars['Date']>,
-  DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
-  Time: ResolverTypeWrapper<Scalars['Time']>,
-  EmailAddress: ResolverTypeWrapper<Scalars['EmailAddress']>,
-  NegativeFloat: ResolverTypeWrapper<Scalars['NegativeFloat']>,
-  NegativeInt: ResolverTypeWrapper<Scalars['NegativeInt']>,
-  NonNegativeFloat: ResolverTypeWrapper<Scalars['NonNegativeFloat']>,
-  NonNegativeInt: ResolverTypeWrapper<Scalars['NonNegativeInt']>,
-  NonPositiveFloat: ResolverTypeWrapper<Scalars['NonPositiveFloat']>,
-  NonPositiveInt: ResolverTypeWrapper<Scalars['NonPositiveInt']>,
-  PhoneNumber: ResolverTypeWrapper<Scalars['PhoneNumber']>,
-  PositiveFloat: ResolverTypeWrapper<Scalars['PositiveFloat']>,
-  PositiveInt: ResolverTypeWrapper<Scalars['PositiveInt']>,
-  PostalCode: ResolverTypeWrapper<Scalars['PostalCode']>,
-  UnsignedFloat: ResolverTypeWrapper<Scalars['UnsignedFloat']>,
-  UnsignedInt: ResolverTypeWrapper<Scalars['UnsignedInt']>,
-  URL: ResolverTypeWrapper<Scalars['URL']>,
-  BigInt: ResolverTypeWrapper<Scalars['BigInt']>,
-  Long: ResolverTypeWrapper<Scalars['Long']>,
-  GUID: ResolverTypeWrapper<Scalars['GUID']>,
-  HexColorCode: ResolverTypeWrapper<Scalars['HexColorCode']>,
-  HSL: ResolverTypeWrapper<Scalars['HSL']>,
-  HSLA: ResolverTypeWrapper<Scalars['HSLA']>,
-  IPv4: ResolverTypeWrapper<Scalars['IPv4']>,
-  IPv6: ResolverTypeWrapper<Scalars['IPv6']>,
-  ISBN: ResolverTypeWrapper<Scalars['ISBN']>,
-  MAC: ResolverTypeWrapper<Scalars['MAC']>,
-  Port: ResolverTypeWrapper<Scalars['Port']>,
-  RGB: ResolverTypeWrapper<Scalars['RGB']>,
-  RGBA: ResolverTypeWrapper<Scalars['RGBA']>,
-  USCurrency: ResolverTypeWrapper<Scalars['USCurrency']>,
+  String: ResolverTypeWrapper<Partial<Scalars['String']>>,
+  Episode: ResolverTypeWrapper<Partial<Episode>>,
+  Character: ResolverTypeWrapper<Partial<Character>>,
+  ID: ResolverTypeWrapper<Partial<Scalars['ID']>>,
+  Int: ResolverTypeWrapper<Partial<Scalars['Int']>>,
+  FriendsConnection: ResolverTypeWrapper<Partial<FriendsConnection>>,
+  FriendsEdge: ResolverTypeWrapper<Partial<FriendsEdge>>,
+  PageInfo: ResolverTypeWrapper<Partial<PageInfo>>,
+  Boolean: ResolverTypeWrapper<Partial<Scalars['Boolean']>>,
+  Review: ResolverTypeWrapper<Partial<Review>>,
+  SearchResult: Partial<ResolversTypes['Human'] | ResolversTypes['Droid'] | ResolversTypes['Starship']>,
+  Human: ResolverTypeWrapper<Partial<Human>>,
+  LengthUnit: ResolverTypeWrapper<Partial<LengthUnit>>,
+  Float: ResolverTypeWrapper<Partial<Scalars['Float']>>,
+  Starship: ResolverTypeWrapper<Partial<Starship>>,
+  Droid: ResolverTypeWrapper<Partial<Droid>>,
+  Mutation: ResolverTypeWrapper<{}>,
+  ReviewInput: ResolverTypeWrapper<Partial<ReviewInput>>,
+  ColorInput: ResolverTypeWrapper<Partial<ColorInput>>,
+  Subscription: ResolverTypeWrapper<{}>,
+  Date: ResolverTypeWrapper<Partial<Scalars['Date']>>,
+  DateTime: ResolverTypeWrapper<Partial<Scalars['DateTime']>>,
+  Time: ResolverTypeWrapper<Partial<Scalars['Time']>>,
+  EmailAddress: ResolverTypeWrapper<Partial<Scalars['EmailAddress']>>,
+  NegativeFloat: ResolverTypeWrapper<Partial<Scalars['NegativeFloat']>>,
+  NegativeInt: ResolverTypeWrapper<Partial<Scalars['NegativeInt']>>,
+  NonNegativeFloat: ResolverTypeWrapper<Partial<Scalars['NonNegativeFloat']>>,
+  NonNegativeInt: ResolverTypeWrapper<Partial<Scalars['NonNegativeInt']>>,
+  NonPositiveFloat: ResolverTypeWrapper<Partial<Scalars['NonPositiveFloat']>>,
+  NonPositiveInt: ResolverTypeWrapper<Partial<Scalars['NonPositiveInt']>>,
+  PhoneNumber: ResolverTypeWrapper<Partial<Scalars['PhoneNumber']>>,
+  PositiveFloat: ResolverTypeWrapper<Partial<Scalars['PositiveFloat']>>,
+  PositiveInt: ResolverTypeWrapper<Partial<Scalars['PositiveInt']>>,
+  PostalCode: ResolverTypeWrapper<Partial<Scalars['PostalCode']>>,
+  UnsignedFloat: ResolverTypeWrapper<Partial<Scalars['UnsignedFloat']>>,
+  UnsignedInt: ResolverTypeWrapper<Partial<Scalars['UnsignedInt']>>,
+  URL: ResolverTypeWrapper<Partial<Scalars['URL']>>,
+  BigInt: ResolverTypeWrapper<Partial<Scalars['BigInt']>>,
+  Long: ResolverTypeWrapper<Partial<Scalars['Long']>>,
+  GUID: ResolverTypeWrapper<Partial<Scalars['GUID']>>,
+  HexColorCode: ResolverTypeWrapper<Partial<Scalars['HexColorCode']>>,
+  HSL: ResolverTypeWrapper<Partial<Scalars['HSL']>>,
+  HSLA: ResolverTypeWrapper<Partial<Scalars['HSLA']>>,
+  IPv4: ResolverTypeWrapper<Partial<Scalars['IPv4']>>,
+  IPv6: ResolverTypeWrapper<Partial<Scalars['IPv6']>>,
+  ISBN: ResolverTypeWrapper<Partial<Scalars['ISBN']>>,
+  MAC: ResolverTypeWrapper<Partial<Scalars['MAC']>>,
+  Port: ResolverTypeWrapper<Partial<Scalars['Port']>>,
+  RGB: ResolverTypeWrapper<Partial<Scalars['RGB']>>,
+  RGBA: ResolverTypeWrapper<Partial<Scalars['RGBA']>>,
+  USCurrency: ResolverTypeWrapper<Partial<Scalars['USCurrency']>>,
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Query: {},
-  String: Scalars['String'],
-  Boolean: Scalars['Boolean'],
-  Date: Scalars['Date'],
-  DateTime: Scalars['DateTime'],
-  Time: Scalars['Time'],
-  EmailAddress: Scalars['EmailAddress'],
-  NegativeFloat: Scalars['NegativeFloat'],
-  NegativeInt: Scalars['NegativeInt'],
-  NonNegativeFloat: Scalars['NonNegativeFloat'],
-  NonNegativeInt: Scalars['NonNegativeInt'],
-  NonPositiveFloat: Scalars['NonPositiveFloat'],
-  NonPositiveInt: Scalars['NonPositiveInt'],
-  PhoneNumber: Scalars['PhoneNumber'],
-  PositiveFloat: Scalars['PositiveFloat'],
-  PositiveInt: Scalars['PositiveInt'],
-  PostalCode: Scalars['PostalCode'],
-  UnsignedFloat: Scalars['UnsignedFloat'],
-  UnsignedInt: Scalars['UnsignedInt'],
-  URL: Scalars['URL'],
-  BigInt: Scalars['BigInt'],
-  Long: Scalars['Long'],
-  GUID: Scalars['GUID'],
-  HexColorCode: Scalars['HexColorCode'],
-  HSL: Scalars['HSL'],
-  HSLA: Scalars['HSLA'],
-  IPv4: Scalars['IPv4'],
-  IPv6: Scalars['IPv6'],
-  ISBN: Scalars['ISBN'],
-  MAC: Scalars['MAC'],
-  Port: Scalars['Port'],
-  RGB: Scalars['RGB'],
-  RGBA: Scalars['RGBA'],
-  USCurrency: Scalars['USCurrency'],
+  String: Partial<Scalars['String']>,
+  Episode: Partial<Episode>,
+  Character: Partial<Character>,
+  ID: Partial<Scalars['ID']>,
+  Int: Partial<Scalars['Int']>,
+  FriendsConnection: Partial<FriendsConnection>,
+  FriendsEdge: Partial<FriendsEdge>,
+  PageInfo: Partial<PageInfo>,
+  Boolean: Partial<Scalars['Boolean']>,
+  Review: Partial<Review>,
+  SearchResult: Partial<ResolversTypes['Human'] | ResolversTypes['Droid'] | ResolversTypes['Starship']>,
+  Human: Partial<Human>,
+  LengthUnit: Partial<LengthUnit>,
+  Float: Partial<Scalars['Float']>,
+  Starship: Partial<Starship>,
+  Droid: Partial<Droid>,
+  Mutation: {},
+  ReviewInput: Partial<ReviewInput>,
+  ColorInput: Partial<ColorInput>,
+  Subscription: {},
+  Date: Partial<Scalars['Date']>,
+  DateTime: Partial<Scalars['DateTime']>,
+  Time: Partial<Scalars['Time']>,
+  EmailAddress: Partial<Scalars['EmailAddress']>,
+  NegativeFloat: Partial<Scalars['NegativeFloat']>,
+  NegativeInt: Partial<Scalars['NegativeInt']>,
+  NonNegativeFloat: Partial<Scalars['NonNegativeFloat']>,
+  NonNegativeInt: Partial<Scalars['NonNegativeInt']>,
+  NonPositiveFloat: Partial<Scalars['NonPositiveFloat']>,
+  NonPositiveInt: Partial<Scalars['NonPositiveInt']>,
+  PhoneNumber: Partial<Scalars['PhoneNumber']>,
+  PositiveFloat: Partial<Scalars['PositiveFloat']>,
+  PositiveInt: Partial<Scalars['PositiveInt']>,
+  PostalCode: Partial<Scalars['PostalCode']>,
+  UnsignedFloat: Partial<Scalars['UnsignedFloat']>,
+  UnsignedInt: Partial<Scalars['UnsignedInt']>,
+  URL: Partial<Scalars['URL']>,
+  BigInt: Partial<Scalars['BigInt']>,
+  Long: Partial<Scalars['Long']>,
+  GUID: Partial<Scalars['GUID']>,
+  HexColorCode: Partial<Scalars['HexColorCode']>,
+  HSL: Partial<Scalars['HSL']>,
+  HSLA: Partial<Scalars['HSLA']>,
+  IPv4: Partial<Scalars['IPv4']>,
+  IPv6: Partial<Scalars['IPv6']>,
+  ISBN: Partial<Scalars['ISBN']>,
+  MAC: Partial<Scalars['MAC']>,
+  Port: Partial<Scalars['Port']>,
+  RGB: Partial<Scalars['RGB']>,
+  RGBA: Partial<Scalars['RGBA']>,
+  USCurrency: Partial<Scalars['USCurrency']>,
 }>;
 
 export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
   name: 'BigInt'
 }
+
+export type CharacterResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Character'] = ResolversParentTypes['Character']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Human' | 'Droid', ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  friends?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Character']>>>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, CharacterFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<Maybe<ResolversTypes['Episode']>>, ParentType, ContextType>,
+}>;
 
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
@@ -235,9 +464,30 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime'
 }
 
+export type DroidResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Droid'] = ResolversParentTypes['Droid']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  friends?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Character']>>>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, DroidFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<Maybe<ResolversTypes['Episode']>>, ParentType, ContextType>,
+  primaryFunction?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+}>;
+
 export interface EmailAddressScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['EmailAddress'], any> {
   name: 'EmailAddress'
 }
+
+export type FriendsConnectionResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['FriendsConnection'] = ResolversParentTypes['FriendsConnection']> = ResolversObject<{
+  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  edges?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['FriendsEdge']>>>, ParentType, ContextType>,
+  friends?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Character']>>>, ParentType, ContextType>,
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>,
+}>;
+
+export type FriendsEdgeResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['FriendsEdge'] = ResolversParentTypes['FriendsEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  node?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType>,
+}>;
 
 export interface GuidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['GUID'], any> {
   name: 'GUID'
@@ -254,6 +504,18 @@ export interface HslScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 export interface HslaScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['HSLA'], any> {
   name: 'HSLA'
 }
+
+export type HumanResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Human'] = ResolversParentTypes['Human']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  homePlanet?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  height?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<HumanHeightArgs, 'unit'>>,
+  mass?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>,
+  friends?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Character']>>>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, HumanFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<Maybe<ResolversTypes['Episode']>>, ParentType, ContextType>,
+  starships?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Starship']>>>, ParentType, ContextType>,
+}>;
 
 export interface IPv4ScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['IPv4'], any> {
   name: 'IPv4'
@@ -274,6 +536,10 @@ export interface LongScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export interface MacScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MAC'], any> {
   name: 'MAC'
 }
+
+export type MutationResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createReview?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<MutationCreateReviewArgs, 'review'>>,
+}>;
 
 export interface NegativeFloatScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NegativeFloat'], any> {
   name: 'NegativeFloat'
@@ -299,6 +565,12 @@ export interface NonPositiveIntScalarConfig extends GraphQLScalarTypeConfig<Reso
   name: 'NonPositiveInt'
 }
 
+export type PageInfoResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  startCursor?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+  endCursor?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+}>;
+
 export interface PhoneNumberScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['PhoneNumber'], any> {
   name: 'PhoneNumber'
 }
@@ -322,6 +594,19 @@ export interface PostalCodeScalarConfig extends GraphQLScalarTypeConfig<Resolver
 export type QueryResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   ping?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  hero?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, QueryHeroArgs>,
+  reviews?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['Review']>>>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'episode'>>,
+  search?: Resolver<Maybe<ReadonlyArray<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, QuerySearchArgs>,
+  character?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, RequireFields<QueryCharacterArgs, 'id'>>,
+  droid?: Resolver<Maybe<ResolversTypes['Droid']>, ParentType, ContextType, RequireFields<QueryDroidArgs, 'id'>>,
+  human?: Resolver<Maybe<ResolversTypes['Human']>, ParentType, ContextType, RequireFields<QueryHumanArgs, 'id'>>,
+  starship?: Resolver<Maybe<ResolversTypes['Starship']>, ParentType, ContextType, RequireFields<QueryStarshipArgs, 'id'>>,
+}>;
+
+export type ReviewResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = ResolversObject<{
+  episode?: Resolver<Maybe<ResolversTypes['Episode']>, ParentType, ContextType>,
+  stars?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  commentary?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 }>;
 
 export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGB'], any> {
@@ -331,6 +616,21 @@ export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 export interface RgbaScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGBA'], any> {
   name: 'RGBA'
 }
+
+export type SearchResultResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Human' | 'Droid' | 'Starship', ParentType, ContextType>
+}>;
+
+export type StarshipResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Starship'] = ResolversParentTypes['Starship']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  length?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<StarshipLengthArgs, 'unit'>>,
+  coordinates?: Resolver<Maybe<ReadonlyArray<ReadonlyArray<ResolversTypes['Float']>>>, ParentType, ContextType>,
+}>;
+
+export type SubscriptionResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  reviewAdded?: SubscriptionResolver<Maybe<ResolversTypes['Review']>, "reviewAdded", ParentType, ContextType, SubscriptionReviewAddedArgs>,
+}>;
 
 export interface TimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Time'], any> {
   name: 'Time'
@@ -354,32 +654,43 @@ export interface UsCurrencyScalarConfig extends GraphQLScalarTypeConfig<Resolver
 
 export type Resolvers<ContextType = ServerContext> = ResolversObject<{
   BigInt?: GraphQLScalarType,
+  Character?: CharacterResolvers,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
+  Droid?: DroidResolvers<ContextType>,
   EmailAddress?: GraphQLScalarType,
+  FriendsConnection?: FriendsConnectionResolvers<ContextType>,
+  FriendsEdge?: FriendsEdgeResolvers<ContextType>,
   GUID?: GraphQLScalarType,
   HexColorCode?: GraphQLScalarType,
   HSL?: GraphQLScalarType,
   HSLA?: GraphQLScalarType,
+  Human?: HumanResolvers<ContextType>,
   IPv4?: GraphQLScalarType,
   IPv6?: GraphQLScalarType,
   ISBN?: GraphQLScalarType,
   Long?: GraphQLScalarType,
   MAC?: GraphQLScalarType,
+  Mutation?: MutationResolvers<ContextType>,
   NegativeFloat?: GraphQLScalarType,
   NegativeInt?: GraphQLScalarType,
   NonNegativeFloat?: GraphQLScalarType,
   NonNegativeInt?: GraphQLScalarType,
   NonPositiveFloat?: GraphQLScalarType,
   NonPositiveInt?: GraphQLScalarType,
+  PageInfo?: PageInfoResolvers<ContextType>,
   PhoneNumber?: GraphQLScalarType,
   Port?: GraphQLScalarType,
   PositiveFloat?: GraphQLScalarType,
   PositiveInt?: GraphQLScalarType,
   PostalCode?: GraphQLScalarType,
   Query?: QueryResolvers<ContextType>,
+  Review?: ReviewResolvers<ContextType>,
   RGB?: GraphQLScalarType,
   RGBA?: GraphQLScalarType,
+  SearchResult?: SearchResultResolvers,
+  Starship?: StarshipResolvers<ContextType>,
+  Subscription?: SubscriptionResolvers<ContextType>,
   Time?: GraphQLScalarType,
   UnsignedFloat?: GraphQLScalarType,
   UnsignedInt?: GraphQLScalarType,

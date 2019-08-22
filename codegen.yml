@@ -8,6 +8,7 @@ generates:
     - typescript-operations
     - typescript-resolvers
 config:
+  defaultMapper: Partial<{T}>
   avoidOptionals: false
   constEnums: false
   useIndexSignature: true # https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-474766729
