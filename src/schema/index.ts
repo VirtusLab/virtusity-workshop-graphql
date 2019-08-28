@@ -14,8 +14,8 @@ const ping = {
     Query: {
       ping: () => 'pong',
     },
-  }
-}
+  },
+};
 
 export default makeExecutableSchema({
   typeDefs: [ping.typeDefs, scalars.typeDefs, isoDate.typeDefs, hello.typeDefs],
