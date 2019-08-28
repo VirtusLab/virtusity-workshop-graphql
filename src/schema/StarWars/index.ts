@@ -3,5 +3,5 @@ import resolvers from './resolvers';
 
 export default {
   typeDefs,
-  resolvers
+  resolvers,
 };

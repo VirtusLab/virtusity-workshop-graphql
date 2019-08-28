@@ -1,19 +1,22 @@
+import {
+  Resolvers, Episode, Review, Human,
+} from '../types';
+
 import humans from './data/humans.js';
 import droids from './data/droids.js';
 import starships from './data/starships.js';
 import reviews from './data/reviews.js';
 
-import { Resolvers, Episode, Review, Human } from '../types';
 
 function getHuman(id: string) {
-  return humans.find(human => human.id === id);
+  return humans.find((human) => human.id === id);
 }
 
-function getDroid(id: String) {
-  return droids.find(droid => droid.id === id);
+function getDroid(id: string) {
+  return droids.find((droid) => droid.id === id);
 }
 
-function getCharacter(id: String) {
+function getCharacter(id: string) {
   return getHuman(id) || getDroid(id);
 }
 
@@ -36,11 +39,11 @@ function getReviews(episode: Episode): Array<Review> {
 }
 
 function getStarship(id: string) {
-  return starships.find(ship => ship.id === id);
+  return starships.find((ship) => ship.id === id);
 }
 
 function toCursor(str: string) {
-  return new Buffer("cursor" + str).toString('base64');
+  return new Buffer(`cursor${str}`).toString('base64');
 }
 
 function fromCursor(str: string) {
@@ -79,10 +82,8 @@ const resolvers: Resolvers = {
     reviewAdded: {
       subscribe: withFilter(
         () => pubsub.asyncIterator(ADDED_REVIEW_TOPIC),
-        (payload, variables) => {
-          return (payload !== undefined) &&
-            ((variables.episode === null) || (payload.reviewAdded.episode === variables.episode));
-        }
+        (payload, variables) => (payload !== undefined)
+            && ((variables.episode === null) || (payload.reviewAdded.episode === variables.episode)),
       ),
     },
   },
@@ -111,7 +112,7 @@ const resolvers: Resolvers = {
       after = after ? parseInt(fromCursor(after), 10) : 0;
       const edges = friends.map((friend, i) => ({
         cursor: toCursor(i + 1),
-        node: getCharacter(friend)
+        node: getCharacter(friend),
       })).slice(after, first + after);
       const slicedFriends = edges.map(({ node }) => node);
       return {
@@ -120,9 +121,9 @@ const resolvers: Resolvers = {
         pageInfo: {
           startCursor: edges.length > 0 ? edges[0].cursor : null,
           hasNextPage: first + after < friends.length,
-          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null
+          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
         },
-        totalCount: friends.length
+        totalCount: friends.length,
       };
     },
     starships: ({ starships }) => starships.map(getStarship),
@@ -135,7 +136,7 @@ const resolvers: Resolvers = {
       after = after ? parseInt(fromCursor(after), 10) : 0;
       const edges = friends.map((friend, i) => ({
         cursor: toCursor(i + 1),
-        node: getCharacter(friend)
+        node: getCharacter(friend),
       })).slice(after, first + after);
       const slicedFriends = edges.map(({ node }) => node);
       return {
@@ -144,9 +145,9 @@ const resolvers: Resolvers = {
         pageInfo: {
           startCursor: edges.length > 0 ? edges[0].cursor : null,
           hasNextPage: first + after < friends.length,
-          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null
+          endCursor: edges.length > 0 ? edges[edges.length - 1].cursor : null,
         },
-        totalCount: friends.length
+        totalCount: friends.length,
       };
     },
     appearsIn: ({ appearsIn }) => appearsIn,
@@ -169,9 +170,7 @@ const resolvers: Resolvers = {
 
       return length;
     },
-    coordinates: () => {
-      return [[1, 2], [3, 4]];
-    }
+    coordinates: () => [[1, 2], [3, 4]],
   },
   SearchResult: {
     __resolveType(data, context, info) {
@@ -187,6 +186,6 @@ const resolvers: Resolvers = {
       return null;
     },
   },
-}
+};
 
 export default resolvers;
