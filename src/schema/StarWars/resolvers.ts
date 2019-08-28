@@ -1,11 +1,11 @@
 import {
-  Resolvers, Episode, Review, Human,
+  Resolvers, Episode, Review,
 } from '../types';
 
-import humans from './data/humans.js';
-import droids from './data/droids.js';
-import starships from './data/starships.js';
-import reviews from './data/reviews.js';
+import humans from './data/humans';
+import droids from './data/droids';
+import starships from './data/starships';
+import reviews from './data/reviews';
 
 
 function getHuman(id: string) {
@@ -18,10 +18,6 @@ function getDroid(id: string) {
 
 function getCharacter(id: string) {
   return getHuman(id) || getDroid(id);
-}
-
-function getFriends(character) {
-  return character.friends && character.friends.map((id) => getCharacter(id));
 }
 
 /**
@@ -43,7 +39,7 @@ function getStarship(id: string) {
 }
 
 function toCursor(str: string) {
-  return new Buffer(`cursor${str}`).toString('base64');
+  return Buffer.from(`cursor${str}`).toString('base64');
 }
 
 function fromCursor(str: string) {
@@ -70,23 +66,6 @@ const resolvers: Resolvers = {
       return allData.filter((obj) => re.test(obj.name));
     },
   },
-  Mutation: {
-    createReview: (root, { episode, review }) => {
-      reviews[episode].push(review);
-      review.episode = episode;
-      pubsub.publish(ADDED_REVIEW_TOPIC, { reviewAdded: review });
-      return review;
-    },
-  },
-  Subscription: {
-    reviewAdded: {
-      subscribe: withFilter(
-        () => pubsub.asyncIterator(ADDED_REVIEW_TOPIC),
-        (payload, variables) => (payload !== undefined)
-            && ((variables.episode === null) || (payload.reviewAdded.episode === variables.episode)),
-      ),
-    },
-  },
   Character: {
     __resolveType(data, context, info) {
       if (getHuman(data.id)) {
@@ -107,9 +86,9 @@ const resolvers: Resolvers = {
       return height;
     },
     friends: ({ friends }) => friends.map(getCharacter),
-    friendsConnection: ({ friends }, { first, after }) => {
-      first = first || friends.length;
-      after = after ? parseInt(fromCursor(after), 10) : 0;
+    friendsConnection: ({ friends }, { firstArg, afterArg }) => {
+      const first = firstArg || friends.length;
+      const after = afterArg ? parseInt(fromCursor(afterArg), 10) : 0;
       const edges = friends.map((friend, i) => ({
         cursor: toCursor(i + 1),
         node: getCharacter(friend),
@@ -126,14 +105,14 @@ const resolvers: Resolvers = {
         totalCount: friends.length,
       };
     },
-    starships: ({ starships }) => starships.map(getStarship),
+    starships: ({ ships }) => ships.map(getStarship),
     appearsIn: ({ appearsIn }) => appearsIn,
   },
   Droid: {
     friends: ({ friends }) => friends.map(getCharacter),
-    friendsConnection: ({ friends }, { first, after }) => {
-      first = first || friends.length;
-      after = after ? parseInt(fromCursor(after), 10) : 0;
+    friendsConnection: ({ friends }, { firstArg, afterArg }) => {
+      const first = firstArg || friends.length;
+      const after = afterArg ? parseInt(fromCursor(afterArg), 10) : 0;
       const edges = friends.map((friend, i) => ({
         cursor: toCursor(i + 1),
         node: getCharacter(friend),

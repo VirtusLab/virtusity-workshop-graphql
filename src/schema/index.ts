@@ -20,5 +20,11 @@ const ping = {
 
 export default makeExecutableSchema({
   typeDefs: [ping.typeDefs, scalars.typeDefs, isoDate.typeDefs, hello.typeDefs, starwars.typeDefs],
-  resolvers: [ping.resolvers, scalars.resolvers, isoDate.resolvers, hello.resolvers, starwars.resolvers],
+  resolvers: [
+    ping.resolvers,
+    scalars.resolvers,
+    isoDate.resolvers,
+    hello.resolvers,
+    starwars.resolvers,
+  ],
 });
