@@ -1,9 +1,8 @@
 import { gql } from 'apollo-server';
 
 export default gql`
-
   type Mutation {
-    createReview(episode: Episode, review: ReviewInput!): Review
+    createReview(episode: Episode!, review: ReviewInput!): Review
   }
 
  type Subscription {
@@ -12,8 +11,8 @@ export default gql`
 
   extend type Query {
     hero(episode: Episode): Character
-    reviews(episode: Episode!): [Review]
-    search(text: String): [SearchResult]
+    reviews(episode: Episode!): [Review!]!
+    search(text: String): [SearchResult!]!
     character(id: ID!): Character
     droid(id: ID!): Droid
     human(id: ID!): Human
@@ -22,7 +21,7 @@ export default gql`
 
   enum Episode {
     NEWHOPE # Star Wars Episode IV: A New Hope, released in 1977.
-    EMPIRE # Star Wars Episode V: The Empire Strikes Back, released in 1980.  
+    EMPIRE # Star Wars Episode V: The Empire Strikes Back, released in 1980.
     JEDI # Star Wars Episode VI: Return of the Jedi, released in 1983.
   }
 
@@ -41,9 +40,9 @@ export default gql`
   interface Character {
     id: ID! # The ID of the character
     name: String! # The name of the character
-    friends: [Character] # The friends of the character, or an empty list if they have none
+    friends: [Character!]! # The friends of the character, or an empty list if they have none
     friendsConnection(first: Int, after: ID): FriendsConnection! # The friends of the character exposed as a connection with edges
-    appearsIn: [Episode]! # The movies this character appears in
+    appearsIn: [Episode!]! # The movies this character appears in
   }
 
   type Human implements Character {
@@ -52,25 +51,25 @@ export default gql`
     homePlanet: String  # The home planet of the human, or null if unknown
     height(unit: LengthUnit = METER): Float # Height in the preferred unit, default is meters
     mass: Float # Mass in kilograms, or null if unknown
-    friends: [Character]
+    friends: [Character!]!
     friendsConnection(first: Int, after: ID): FriendsConnection!
-    appearsIn: [Episode]!
-    starships: [Starship] # A list of starships this person has piloted, or an empty list if none
+    appearsIn: [Episode!]!
+    starships: [Starship!]! # A list of starships this person has piloted, or an empty list if none
   }
 
   type Droid implements Character {
     id: ID!
     name: String!
-    friends: [Character]
+    friends: [Character!]!
     friendsConnection(first: Int, after: ID): FriendsConnection!
-    appearsIn: [Episode]!
+    appearsIn: [Episode!]!
     primaryFunction: String # This droid's primary function
   }
 
   type FriendsConnection {
     totalCount: Int # The total number of friends
-    edges: [FriendsEdge] # The edges for each of the character's friends.
-    friends: [Character] # A list of the friends, as a convenience when edges are not needed.
+    edges: [FriendsEdge!]! # The edges for each of the character's friends.
+    friends: [Character!]! # A list of the friends, as a convenience when edges are not needed.
     pageInfo: PageInfo! # Information for paginating this connection
   }
 
@@ -94,15 +93,7 @@ export default gql`
   input ReviewInput {
     stars: Int! # 0-5 stars
     commentary: String # Comment about the movie, optional
-    favorite_color: ColorInput # Favorite color, optional
-  }
-
-  input ColorInput {
-    red: Int!
-    green: Int!
-    blue: Int!
   }
 
   union SearchResult = Human | Droid | Starship
-
 `;

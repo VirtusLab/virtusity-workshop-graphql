@@ -23,6 +23,8 @@
       "./@types",
       "./node_modules/@types"
     ],
+    "incremental": true,
+    "outDir": "target",
     "rootDir": "src"
   }
 }

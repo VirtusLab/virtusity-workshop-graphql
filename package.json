@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "nodemon -x ts-node --pretty ./src/index.ts",
+    "start:debug": "node --nolazy --inspect-brk -r ts-node/register src/index.ts",
     "lint": "yarn run lint:js",
     "lint:js": "eslint --ext ts --ext js .",
     "generate:graphql:ts": "graphql-codegen"
@@ -13,7 +14,8 @@
     "apollo-server": "^2.8.1",
     "graphql": "^14.4.2",
     "graphql-iso-date": "^3.6.1",
-    "graphql-scalars": "^1.0.0"
+    "graphql-scalars": "^1.0.0",
+    "graphql-subscriptions": "^1.1.0"
   },
   "devDependencies": {
     "@graphql-codegen/add": "^1.5.0",

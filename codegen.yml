@@ -3,13 +3,12 @@ schema:
   - src/schema/**/typeDefs.ts
 generates:
   "src/schema/types.ts":
+    - add: '/* eslint-disable */'
     - add: '// THIS IS A GENERATED FILE, use `yarn generate:graphql:ts to regenerate`'
     - typescript
     - typescript-operations
     - typescript-resolvers
 config:
-  defaultMapper: Partial<{T}>
-  avoidOptionals: false
   constEnums: false
   useIndexSignature: true # https://github.com/dotansimha/graphql-code-generator/issues/1133#issuecomment-474766729
   immutableTypes: true
@@ -20,4 +19,4 @@ config:
     DateTime: Date
     Date: Date
     Time: Date
-  contextType: ServerContext
+#  contextType: ServerContext
