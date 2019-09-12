@@ -140,9 +140,9 @@ const resolvers: Resolvers = {
   Subscription: {
     reviewAdded: {
       subscribe: withFilter(
-        () => pubsub.asyncIterator(ADDED_REVIEW_TOPIC),
+        () => pubsub.asyncIterator([ADDED_REVIEW_TOPIC]),
         (payload, variables) => (payload !== undefined)
-          && ((variables.episode === null)
+          && ((!variables.episode)
             || (payload.reviewAdded.episode === variables.episode)),
       ),
     },
