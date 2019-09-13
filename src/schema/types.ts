@@ -1,6 +1,8 @@
+/* eslint-disable */
 // THIS IS A GENERATED FILE, use `yarn generate:graphql:ts to regenerate`
 import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from 'graphql';
 export type Maybe<T> = T | null;
+export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string,
@@ -42,6 +44,107 @@ export type Scalars = {
 };
 
 
+export type Character = {
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly friends: ReadonlyArray<Character>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Episode>,
+};
+
+
+export type CharacterFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+
+
+export type Droid = Character & {
+  readonly __typename?: 'Droid',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly friends: ReadonlyArray<Character>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Episode>,
+  readonly primaryFunction?: Maybe<Scalars['String']>,
+};
+
+
+export type DroidFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+
+export enum Episode {
+  NEWHOPE = 'NEWHOPE',
+  EMPIRE = 'EMPIRE',
+  JEDI = 'JEDI'
+}
+
+export type FriendsConnection = {
+  readonly __typename?: 'FriendsConnection',
+  readonly totalCount?: Maybe<Scalars['Int']>,
+  readonly edges: ReadonlyArray<FriendsEdge>,
+  readonly friends: ReadonlyArray<Character>,
+  readonly pageInfo: PageInfo,
+};
+
+export type FriendsEdge = {
+  readonly __typename?: 'FriendsEdge',
+  readonly cursor: Scalars['ID'],
+  readonly node?: Maybe<Character>,
+};
+
+
+
+
+
+export type Human = Character & {
+  readonly __typename?: 'Human',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly homePlanet?: Maybe<Scalars['String']>,
+  readonly height?: Maybe<Scalars['Float']>,
+  readonly mass?: Maybe<Scalars['Float']>,
+  readonly friends: ReadonlyArray<Character>,
+  readonly friendsConnection: FriendsConnection,
+  readonly appearsIn: ReadonlyArray<Episode>,
+  readonly starships: ReadonlyArray<Starship>,
+};
+
+
+export type HumanHeightArgs = {
+  unit?: Maybe<LengthUnit>
+};
+
+
+export type HumanFriendsConnectionArgs = {
+  first?: Maybe<Scalars['Int']>,
+  after?: Maybe<Scalars['ID']>
+};
+
+
+
+
+export enum LengthUnit {
+  METER = 'METER',
+  FOOT = 'FOOT'
+}
+
+
+
+export type Mutation = {
+  readonly __typename?: 'Mutation',
+  readonly createReview?: Maybe<Review>,
+};
+
+
+export type MutationCreateReviewArgs = {
+  episode: Episode,
+  review: ReviewInput
+};
 
 
 
@@ -49,16 +152,12 @@ export type Scalars = {
 
 
 
-
-
-
-
-
-
-
-
-
-
+export type PageInfo = {
+  readonly __typename?: 'PageInfo',
+  readonly startCursor?: Maybe<Scalars['ID']>,
+  readonly endCursor?: Maybe<Scalars['ID']>,
+  readonly hasNextPage: Scalars['Boolean'],
+};
 
 
 
@@ -66,12 +165,91 @@ export type Scalars = {
 
 
 export type Query = {
-  __typename?: 'Query',
+  readonly __typename?: 'Query',
   readonly ping: Scalars['String'],
   readonly hello: Scalars['String'],
+  readonly hero?: Maybe<Character>,
+  readonly reviews: ReadonlyArray<Review>,
+  readonly search: ReadonlyArray<SearchResult>,
+  readonly character?: Maybe<Character>,
+  readonly droid?: Maybe<Droid>,
+  readonly human?: Maybe<Human>,
+  readonly starship?: Maybe<Starship>,
 };
 
 
+export type QueryHeroArgs = {
+  episode?: Maybe<Episode>
+};
+
+
+export type QueryReviewsArgs = {
+  episode: Episode
+};
+
+
+export type QuerySearchArgs = {
+  text?: Maybe<Scalars['String']>
+};
+
+
+export type QueryCharacterArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryDroidArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryHumanArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryStarshipArgs = {
+  id: Scalars['ID']
+};
+
+export type Review = {
+  readonly __typename?: 'Review',
+  readonly episode?: Maybe<Episode>,
+  readonly stars: Scalars['Int'],
+  readonly commentary?: Maybe<Scalars['String']>,
+};
+
+export type ReviewInput = {
+  readonly stars: Scalars['Int'],
+  readonly commentary?: Maybe<Scalars['String']>,
+};
+
+
+
+export type SearchResult = Human | Droid | Starship;
+
+export type Starship = {
+  readonly __typename?: 'Starship',
+  readonly id: Scalars['ID'],
+  readonly name: Scalars['String'],
+  readonly length?: Maybe<Scalars['Float']>,
+  readonly coordinates?: Maybe<ReadonlyArray<ReadonlyArray<Scalars['Float']>>>,
+};
+
+
+export type StarshipLengthArgs = {
+  unit?: Maybe<LengthUnit>
+};
+
+export type Subscription = {
+  readonly __typename?: 'Subscription',
+  readonly reviewAdded?: Maybe<Review>,
+};
+
+
+export type SubscriptionReviewAddedArgs = {
+  episode?: Maybe<Episode>
+};
 
 
 
@@ -151,7 +329,24 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>,
   String: ResolverTypeWrapper<Scalars['String']>,
+  Episode: Episode,
+  Character: ResolverTypeWrapper<Character>,
+  ID: ResolverTypeWrapper<Scalars['ID']>,
+  Int: ResolverTypeWrapper<Scalars['Int']>,
+  FriendsConnection: ResolverTypeWrapper<FriendsConnection>,
+  FriendsEdge: ResolverTypeWrapper<FriendsEdge>,
+  PageInfo: ResolverTypeWrapper<PageInfo>,
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>,
+  Review: ResolverTypeWrapper<Review>,
+  SearchResult: ResolversTypes['Human'] | ResolversTypes['Droid'] | ResolversTypes['Starship'],
+  Human: ResolverTypeWrapper<Human>,
+  LengthUnit: LengthUnit,
+  Float: ResolverTypeWrapper<Scalars['Float']>,
+  Starship: ResolverTypeWrapper<Starship>,
+  Droid: ResolverTypeWrapper<Droid>,
+  Mutation: ResolverTypeWrapper<{}>,
+  ReviewInput: ReviewInput,
+  Subscription: ResolverTypeWrapper<{}>,
   Date: ResolverTypeWrapper<Scalars['Date']>,
   DateTime: ResolverTypeWrapper<Scalars['DateTime']>,
   Time: ResolverTypeWrapper<Scalars['Time']>,
@@ -189,7 +384,24 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Query: {},
   String: Scalars['String'],
+  Episode: Episode,
+  Character: Character,
+  ID: Scalars['ID'],
+  Int: Scalars['Int'],
+  FriendsConnection: FriendsConnection,
+  FriendsEdge: FriendsEdge,
+  PageInfo: PageInfo,
   Boolean: Scalars['Boolean'],
+  Review: Review,
+  SearchResult: ResolversTypes['Human'] | ResolversTypes['Droid'] | ResolversTypes['Starship'],
+  Human: Human,
+  LengthUnit: LengthUnit,
+  Float: Scalars['Float'],
+  Starship: Starship,
+  Droid: Droid,
+  Mutation: {},
+  ReviewInput: ReviewInput,
+  Subscription: {},
   Date: Scalars['Date'],
   DateTime: Scalars['DateTime'],
   Time: Scalars['Time'],
@@ -227,6 +439,15 @@ export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'BigInt'
 }
 
+export type CharacterResolvers<ContextType = any, ParentType extends ResolversParentTypes['Character'] = ResolversParentTypes['Character']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Human' | 'Droid', ParentType, ContextType>,
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  friends?: Resolver<ReadonlyArray<ResolversTypes['Character']>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, CharacterFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<ResolversTypes['Episode']>, ParentType, ContextType>,
+}>;
+
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date'
 }
@@ -235,9 +456,30 @@ export interface DateTimeScalarConfig extends GraphQLScalarTypeConfig<ResolversT
   name: 'DateTime'
 }
 
+export type DroidResolvers<ContextType = any, ParentType extends ResolversParentTypes['Droid'] = ResolversParentTypes['Droid']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  friends?: Resolver<ReadonlyArray<ResolversTypes['Character']>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, DroidFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<ResolversTypes['Episode']>, ParentType, ContextType>,
+  primaryFunction?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+}>;
+
 export interface EmailAddressScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['EmailAddress'], any> {
   name: 'EmailAddress'
 }
+
+export type FriendsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FriendsConnection'] = ResolversParentTypes['FriendsConnection']> = ResolversObject<{
+  totalCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  edges?: Resolver<ReadonlyArray<ResolversTypes['FriendsEdge']>, ParentType, ContextType>,
+  friends?: Resolver<ReadonlyArray<ResolversTypes['Character']>, ParentType, ContextType>,
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>,
+}>;
+
+export type FriendsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FriendsEdge'] = ResolversParentTypes['FriendsEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  node?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType>,
+}>;
 
 export interface GuidScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['GUID'], any> {
   name: 'GUID'
@@ -254,6 +496,18 @@ export interface HslScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 export interface HslaScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['HSLA'], any> {
   name: 'HSLA'
 }
+
+export type HumanResolvers<ContextType = any, ParentType extends ResolversParentTypes['Human'] = ResolversParentTypes['Human']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  homePlanet?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  height?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<HumanHeightArgs, 'unit'>>,
+  mass?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>,
+  friends?: Resolver<ReadonlyArray<ResolversTypes['Character']>, ParentType, ContextType>,
+  friendsConnection?: Resolver<ResolversTypes['FriendsConnection'], ParentType, ContextType, HumanFriendsConnectionArgs>,
+  appearsIn?: Resolver<ReadonlyArray<ResolversTypes['Episode']>, ParentType, ContextType>,
+  starships?: Resolver<ReadonlyArray<ResolversTypes['Starship']>, ParentType, ContextType>,
+}>;
 
 export interface IPv4ScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['IPv4'], any> {
   name: 'IPv4'
@@ -274,6 +528,10 @@ export interface LongScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
 export interface MacScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['MAC'], any> {
   name: 'MAC'
 }
+
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createReview?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<MutationCreateReviewArgs, 'episode' | 'review'>>,
+}>;
 
 export interface NegativeFloatScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['NegativeFloat'], any> {
   name: 'NegativeFloat'
@@ -299,6 +557,12 @@ export interface NonPositiveIntScalarConfig extends GraphQLScalarTypeConfig<Reso
   name: 'NonPositiveInt'
 }
 
+export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  startCursor?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+  endCursor?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>,
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>,
+}>;
+
 export interface PhoneNumberScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['PhoneNumber'], any> {
   name: 'PhoneNumber'
 }
@@ -319,9 +583,22 @@ export interface PostalCodeScalarConfig extends GraphQLScalarTypeConfig<Resolver
   name: 'PostalCode'
 }
 
-export type QueryResolvers<ContextType = ServerContext, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   ping?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
   hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  hero?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, QueryHeroArgs>,
+  reviews?: Resolver<ReadonlyArray<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'episode'>>,
+  search?: Resolver<ReadonlyArray<ResolversTypes['SearchResult']>, ParentType, ContextType, QuerySearchArgs>,
+  character?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, RequireFields<QueryCharacterArgs, 'id'>>,
+  droid?: Resolver<Maybe<ResolversTypes['Droid']>, ParentType, ContextType, RequireFields<QueryDroidArgs, 'id'>>,
+  human?: Resolver<Maybe<ResolversTypes['Human']>, ParentType, ContextType, RequireFields<QueryHumanArgs, 'id'>>,
+  starship?: Resolver<Maybe<ResolversTypes['Starship']>, ParentType, ContextType, RequireFields<QueryStarshipArgs, 'id'>>,
+}>;
+
+export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = ResolversObject<{
+  episode?: Resolver<Maybe<ResolversTypes['Episode']>, ParentType, ContextType>,
+  stars?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  commentary?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
 }>;
 
 export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGB'], any> {
@@ -331,6 +608,21 @@ export interface RgbScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes[
 export interface RgbaScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['RGBA'], any> {
   name: 'RGBA'
 }
+
+export type SearchResultResolvers<ContextType = any, ParentType extends ResolversParentTypes['SearchResult'] = ResolversParentTypes['SearchResult']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Human' | 'Droid' | 'Starship', ParentType, ContextType>
+}>;
+
+export type StarshipResolvers<ContextType = any, ParentType extends ResolversParentTypes['Starship'] = ResolversParentTypes['Starship']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  length?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType, RequireFields<StarshipLengthArgs, 'unit'>>,
+  coordinates?: Resolver<Maybe<ReadonlyArray<ReadonlyArray<ResolversTypes['Float']>>>, ParentType, ContextType>,
+}>;
+
+export type SubscriptionResolvers<ContextType = any, ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']> = ResolversObject<{
+  reviewAdded?: SubscriptionResolver<Maybe<ResolversTypes['Review']>, "reviewAdded", ParentType, ContextType, SubscriptionReviewAddedArgs>,
+}>;
 
 export interface TimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Time'], any> {
   name: 'Time'
@@ -352,34 +644,45 @@ export interface UsCurrencyScalarConfig extends GraphQLScalarTypeConfig<Resolver
   name: 'USCurrency'
 }
 
-export type Resolvers<ContextType = ServerContext> = ResolversObject<{
+export type Resolvers<ContextType = any> = ResolversObject<{
   BigInt?: GraphQLScalarType,
+  Character?: CharacterResolvers,
   Date?: GraphQLScalarType,
   DateTime?: GraphQLScalarType,
+  Droid?: DroidResolvers<ContextType>,
   EmailAddress?: GraphQLScalarType,
+  FriendsConnection?: FriendsConnectionResolvers<ContextType>,
+  FriendsEdge?: FriendsEdgeResolvers<ContextType>,
   GUID?: GraphQLScalarType,
   HexColorCode?: GraphQLScalarType,
   HSL?: GraphQLScalarType,
   HSLA?: GraphQLScalarType,
+  Human?: HumanResolvers<ContextType>,
   IPv4?: GraphQLScalarType,
   IPv6?: GraphQLScalarType,
   ISBN?: GraphQLScalarType,
   Long?: GraphQLScalarType,
   MAC?: GraphQLScalarType,
+  Mutation?: MutationResolvers<ContextType>,
   NegativeFloat?: GraphQLScalarType,
   NegativeInt?: GraphQLScalarType,
   NonNegativeFloat?: GraphQLScalarType,
   NonNegativeInt?: GraphQLScalarType,
   NonPositiveFloat?: GraphQLScalarType,
   NonPositiveInt?: GraphQLScalarType,
+  PageInfo?: PageInfoResolvers<ContextType>,
   PhoneNumber?: GraphQLScalarType,
   Port?: GraphQLScalarType,
   PositiveFloat?: GraphQLScalarType,
   PositiveInt?: GraphQLScalarType,
   PostalCode?: GraphQLScalarType,
   Query?: QueryResolvers<ContextType>,
+  Review?: ReviewResolvers<ContextType>,
   RGB?: GraphQLScalarType,
   RGBA?: GraphQLScalarType,
+  SearchResult?: SearchResultResolvers,
+  Starship?: StarshipResolvers<ContextType>,
+  Subscription?: SubscriptionResolvers<ContextType>,
   Time?: GraphQLScalarType,
   UnsignedFloat?: GraphQLScalarType,
   UnsignedInt?: GraphQLScalarType,
@@ -392,4 +695,4 @@ export type Resolvers<ContextType = ServerContext> = ResolversObject<{
  * @deprecated
  * Use "Resolvers" root object instead. If you wish to get "IResolvers", add "typesPrefix: I" to your config.
 */
-export type IResolvers<ContextType = ServerContext> = Resolvers<ContextType>;
+export type IResolvers<ContextType = any> = Resolvers<ContextType>;
