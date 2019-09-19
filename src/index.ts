@@ -1,11 +1,22 @@
-import { ApolloServer } from 'apollo-server';
+import { ApolloServer, gql } from 'apollo-server';
 
-import schema from './schema';
+import { Resolvers } from './schema/types';
+
+const typeDefs = gql`
+  type Query {
+    hello(name: String): String!
+  }
+`;
+
+const resolvers: Resolvers = {
+  Query: {
+    hello: (parent, { name }) => `Hello ${name || 'World'}!`,
+  },
+};
 
 const server = new ApolloServer({
-  schema,
-  debug: true,
-  tracing: true,
+  typeDefs,
+  resolvers,
 });
 
 server.listen().then(({ url }) => {
