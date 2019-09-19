@@ -178,6 +178,11 @@ export type Query = {
 };
 
 
+export type QueryHelloArgs = {
+  name?: Maybe<Scalars['String']>
+};
+
+
 export type QueryHeroArgs = {
   episode?: Maybe<Episode>
 };
@@ -585,7 +590,7 @@ export interface PostalCodeScalarConfig extends GraphQLScalarTypeConfig<Resolver
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   ping?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
-  hello?: Resolver<ResolversTypes['String'], ParentType, ContextType>,
+  hello?: Resolver<ResolversTypes['String'], ParentType, ContextType, QueryHelloArgs>,
   hero?: Resolver<Maybe<ResolversTypes['Character']>, ParentType, ContextType, QueryHeroArgs>,
   reviews?: Resolver<ReadonlyArray<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'episode'>>,
   search?: Resolver<ReadonlyArray<ResolversTypes['SearchResult']>, ParentType, ContextType, QuerySearchArgs>,
