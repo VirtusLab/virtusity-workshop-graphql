@@ -60,6 +60,8 @@ function toCursor(str: string | number) {
 }
 
 function fromCursor(str: string) {
+  // As a reminder that the cursors are opaque and that their format should not be relied upon,
+  // we suggest base64 encoding them.
   return Buffer.from(str, 'base64').toString().slice(6);
 }
 
