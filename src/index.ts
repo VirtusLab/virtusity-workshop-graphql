@@ -1,5 +1,6 @@
-import { ApolloServer, gql } from 'apollo-server';
+import { ApolloServer, gql, makeExecutableSchema } from 'apollo-server';
 
+import StarWars from './schema/StarWars';
 import { Resolvers } from './schema/types';
 
 const typeDefs = gql`
@@ -14,9 +15,19 @@ const resolvers: Resolvers = {
   },
 };
 
+const schema = makeExecutableSchema({
+  typeDefs: [
+    typeDefs,
+    StarWars.typeDefs,
+  ],
+  resolvers: [
+    resolvers,
+    StarWars.resolvers,
+  ],
+});
+
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
 });
 
 server.listen().then(({ url }) => {

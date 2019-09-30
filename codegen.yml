@@ -1,7 +1,7 @@
 schema:
   - src/index.ts
 #  - src/schema/index.ts
-#  - src/schema/**/typeDefs.ts
+  - src/schema/**/typeDefs.ts
 generates:
   "src/schema/types.ts":
     - add: '/* eslint-disable */'
