@@ -1,9 +1,13 @@
+import { GraphQLScalarType, Kind } from 'graphql';
+
 import {
   Droid,
   DroidFunction,
+  Episode,
   Human,
   LengthUnit,
   Resolvers,
+  Review,
 } from '../types';
 
 const humans: Human[] = [
@@ -46,6 +50,24 @@ const droids: Droid[] = [
 
 const data = [...humans, ...droids];
 
+type Reviews = Record<Episode, Review[]>;
+const reviews: Reviews = {
+  [Episode.EMPIRE]: [],
+  [Episode.JEDI]: [],
+  [Episode.NEWHOPE]: [],
+  [Episode.CLONES]: [],
+  [Episode.PHANTOM]: [],
+  [Episode.SITH]: [],
+};
+
+function parseStarValue(value: string) {
+  const stars = parseInt(value, 10);
+  if (!Number.isNaN(stars) && stars >= 0 && stars <= 5) {
+    return stars;
+  }
+  throw new Error('Provide correct star rating (0-5)');
+}
+
 const resolvers: Resolvers = {
   Character: {
     __resolveType(character) {
@@ -60,11 +82,37 @@ const resolvers: Resolvers = {
     },
     height: ({ height }, { unit }) => (unit === LengthUnit.METER ? height : height * 3.281),
   },
+  Stars: new GraphQLScalarType({
+    name: 'Stars',
+    description: 'Movie rating',
+    parseValue: parseStarValue,
+    serialize(value: number) {
+      return '⭐️'.repeat(value);
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return parseStarValue(ast.value);
+      }
+
+      throw new Error('Star rating should be numeric');
+    },
+  }),
+  Mutation: {
+    createReview: (_, { review, episode }) => {
+      reviews[episode].push(review);
+
+      return {
+        episode,
+        ...review,
+      };
+    },
+  },
   Query: {
     all: () => data,
     character: (parent, { id }) => Promise.resolve(
       data.find((value) => id === value.id) || null,
     ),
+    reviews: (_, { episode }) => reviews[episode],
   },
 };
 

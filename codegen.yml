@@ -20,4 +20,5 @@ config:
     DateTime: Date
     Date: Date
     Time: Date
+    Stars: string
 #  contextType: ServerContext
