@@ -11,7 +11,7 @@
     "generate:graphql:ts": "graphql-codegen"
   },
   "dependencies": {
-    "apollo-server": "^2.8.1",
+    "apollo-server": "^2.14.2",
     "graphql": "^14.4.2",
     "graphql-iso-date": "^3.6.1",
     "graphql-scalars": "^1.0.0",
